@@ -43,7 +43,8 @@ public class DelimitorBaseSever {
                             String ds = NetConfig.DELIMITER;
                             byte[] bytes = ds.getBytes();
                             ByteBuf delimiter = Unpooled.copiedBuffer(bytes);
-                            ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024,delimiter));
+                            ch.pipeline().addLast(new DelimiterBasedFrameDecoder(
+                                    1024,delimiter));
                             ch.pipeline().addLast(handler);
                         }
                     })
