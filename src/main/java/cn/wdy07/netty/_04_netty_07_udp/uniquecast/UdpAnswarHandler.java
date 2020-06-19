@@ -17,6 +17,10 @@ public class UdpAnswarHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
+        //这个地方有点不能理解，前面TCP的都是在channelRead()方法中将对象强转成ByteBuf，
+        // 因为接收到的所有字节都缓存在了ByteBuf对象中，别的对象不能直接强转，必须使用序列化工具（内置的ProtoBuf或者第三方messagePack等）
+        //这里直接将[Object]msg强转成DatagramPacket，应该是NIODataFrameChannel的作用
+
         DatagramPacket packet = (DatagramPacket) msg;
         String question = packet.content().toString(CharsetUtil.UTF_8);
         if(UdpQuestionSide.QUESTION.equals(question)){
