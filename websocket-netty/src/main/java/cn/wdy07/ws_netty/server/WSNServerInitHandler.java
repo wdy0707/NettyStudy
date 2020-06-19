@@ -34,7 +34,7 @@ public class WSNServerInitHandler extends ChannelInitializer<Channel> {
                     //对WS应答的数据压缩
                     .addLast(new WebSocketServerCompressionHandler())
                     //netty提供的websocket协议的升级以及通信的控制Handler
-                    .addLast(new WebSocketServerProtocolHandler(WSPATH))
+                    .addLast(new WebSocketServerProtocolHandler(WSPATH,null,true))
                     //页面展示Handler
                     .addLast(new WSNPageShowHandler(WSPATH))
                     //WebSocker业务处理Handler

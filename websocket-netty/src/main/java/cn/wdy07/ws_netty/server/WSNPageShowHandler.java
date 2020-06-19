@@ -26,6 +26,7 @@ public class WSNPageShowHandler extends ChannelInboundHandlerAdapter {
         //不是HTTP，fire到下一个Handler
         if(! (msg instanceof FullHttpRequest)){
             ctx.fireChannelRead(msg);
+            return;
         }
 
         FullHttpRequest request = (FullHttpRequest) msg;

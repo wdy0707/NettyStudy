@@ -5,6 +5,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,7 @@ public class WSNServerWSHandler extends ChannelInboundHandlerAdapter {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(WSNServerWSHandler.class);
+
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -48,6 +50,21 @@ public class WSNServerWSHandler extends ChannelInboundHandlerAdapter {
             ctx.writeAndFlush(new TextWebSocketFrame(res));
 
             throw new UnsupportedOperationException(res);
+        }
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        //如果握手成功
+        if(evt == WebSocketServerProtocolHandler.ServerHandshakeStateEvent.HANDSHAKE_COMPLETE){
+            //先通知所有channel有新的连接加入
+            channelGroup.writeAndFlush(new TextWebSocketFrame("new client added :"+ ctx.channel()));
+
+            //然后将新连接加入到channelGroup
+            System.out.println("ctx.channel().id(): "+ctx.channel().id());
+            channelGroup.add(ctx.channel());
+        }else{
+            super.userEventTriggered(ctx,evt);
         }
     }
 }
